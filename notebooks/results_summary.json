@@ -1,0 +1,23 @@
+[
+    {
+        "route": "Marina\u2192Downtown",
+        "min_time": 14.863083757492282,
+        "max_time": 18.787251415832706,
+        "min_toll": 8.0,
+        "max_toll": 12.0
+    },
+    {
+        "route": "Barsha\u2192DXB",
+        "min_time": 18.227095224865664,
+        "max_time": 26.89718780991653,
+        "min_toll": 0.0,
+        "max_toll": 12.0
+    },
+    {
+        "route": "JLT\u2192Qusais",
+        "min_time": 23.697924948586678,
+        "max_time": 35.71146150695566,
+        "min_toll": 0.0,
+        "max_toll": 16.0
+    }
+]

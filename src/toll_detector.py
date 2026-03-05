@@ -3,15 +3,21 @@ from geopy.distance import geodesic
 
 def is_near_gate(lat, lon, gates_df):
     """
-    Check if a coordinate is inside a toll gate radius.
+    Determine whether a coordinate lies within the radius of a toll gate.
+
+    Returns
+    -------
+    tuple
+        (True, gate_name) if inside a gate radius, otherwise (False, None)
     """
+
     for _, gate in gates_df.iterrows():
-        dist = geodesic(
+        distance = geodesic(
             (lat, lon),
             (gate["lat"], gate["lon"])
         ).meters
 
-        if dist <= gate["radius_m"]:
+        if distance <= gate["radius_m"]:
             return True, gate["name"]
 
     return False, None
@@ -19,21 +25,39 @@ def is_near_gate(lat, lon, gates_df):
 
 def route_tolls(route_nodes, G, gates_df, toll_price=4.0):
     """
-    Detect toll gates crossed and return TOTAL toll cost (AED).
+    Calculate the total toll cost for a route.
+
+    Parameters
+    ----------
+    route_nodes : list
+        Ordered list of node IDs representing the route.
+
+    G : networkx graph
+        Road network graph.
+
+    gates_df : pandas DataFrame
+        Toll gate locations and radii.
+
+    toll_price : float
+        Price per toll gate crossing (AED).
+
+    Returns
+    -------
+    float
+        Total toll cost for the route.
     """
 
-    crossed = set()
+    crossed_gates = set()
 
     for node in route_nodes:
         lat = G.nodes[node]["y"]
         lon = G.nodes[node]["x"]
 
-        hit, gate = is_near_gate(lat, lon, gates_df)
+        hit, gate_name = is_near_gate(lat, lon, gates_df)
 
         if hit:
-            crossed.add(gate)
+            crossed_gates.add(gate_name)
 
-    # compute monetary toll cost
-    total_cost = len(crossed) * toll_price
+    total_cost = len(crossed_gates) * toll_price
 
     return float(total_cost)

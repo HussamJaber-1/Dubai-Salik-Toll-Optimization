@@ -3,13 +3,24 @@ import numpy as np
 
 def classify_tradeoff(routes_data):
     """
-    Determine if trip has meaningful non-binary toll tradeoff.
+    Classify the toll structure of a route set.
 
-    routes_data = list of dicts with keys:
-        time, toll
+    Parameters
+    ----------
+    routes_data : list of dict
+        Each dictionary must contain:
+        {"time": float, "toll": float}
+
+    Returns
+    -------
+    str
+        One of:
+        - "no_tradeoff": all routes have the same toll cost
+        - "binary": two toll levels (typical avoid vs toll case)
+        - "multi_toll": multiple toll levels enabling marginal trade-offs
     """
 
-    unique_tolls = sorted(set(r["toll"] for r in routes_data))
+    unique_tolls = sorted(set(route["toll"] for route in routes_data))
 
     if len(unique_tolls) <= 1:
         return "no_tradeoff"
@@ -20,13 +31,25 @@ def classify_tradeoff(routes_data):
     return "multi_toll"
 
 
-def compute_efficiency(routeA, routeB):
+def compute_efficiency(route_a, route_b):
     """
-    Minutes saved per AED between two routes.
+    Compute the efficiency of paying additional tolls.
+
+    Efficiency is measured as minutes saved per AED.
+
+    Parameters
+    ----------
+    route_a : dict
+    route_b : dict
+
+    Returns
+    -------
+    float or None
+        Minutes saved per AED. Returns None if toll cost does not increase.
     """
 
-    delta_time = routeA["time"] - routeB["time"]
-    delta_toll = routeB["toll"] - routeA["toll"]
+    delta_time = route_a["time"] - route_b["time"]
+    delta_toll = route_b["toll"] - route_a["toll"]
 
     if delta_toll <= 0:
         return None
@@ -36,29 +59,50 @@ def compute_efficiency(routeA, routeB):
 
 def simulate_lifestyle_choice(routes_data, vot):
     """
-    Choose optimal route for a given lifestyle VoT.
+    Select the economically optimal route for a given Value of Time.
+
+    Parameters
+    ----------
+    routes_data : list of dict
+    vot : float
+        Value of time (AED per minute)
+
+    Returns
+    -------
+    dict
+        Route with the lowest generalized cost.
     """
 
     from src.cost_model import generalized_cost
 
-    best = min(
+    best_route = min(
         routes_data,
         key=lambda r: generalized_cost(r["time"], r["toll"], vot)
     )
 
-    return best
+    return best_route
 
 
 def lifestyle_distribution(routes_data, vot_values):
     """
-    Simulate which routes are chosen across VoT spectrum.
+    Simulate route choices across a range of Value-of-Time levels.
+
+    Parameters
+    ----------
+    routes_data : list of dict
+    vot_values : iterable
+
+    Returns
+    -------
+    list
+        Index of the chosen route for each VOT value.
     """
 
     chosen_indices = []
 
-    for v in vot_values:
-        best = simulate_lifestyle_choice(routes_data, v)
-        idx = routes_data.index(best)
-        chosen_indices.append(idx)
+    for vot in vot_values:
+        best_route = simulate_lifestyle_choice(routes_data, vot)
+        route_index = routes_data.index(best_route)
+        chosen_indices.append(route_index)
 
     return chosen_indices

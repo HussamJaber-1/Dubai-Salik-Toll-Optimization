@@ -1,4 +1,64 @@
-# Byte-compiled / optimized / DLL files
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+
+# Mac
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+
+# Notebook cache
+notebooks/cache/
+
+# Data artifacts
+*.log# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+
+# Mac
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+
+# Notebook cache
+notebooks/cache/
+
+# Data artifacts
+*.log# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env
+
+# Mac
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints
+
+# Notebook cache
+notebooks/cache/
+
+# Data artifacts
+*.log# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class

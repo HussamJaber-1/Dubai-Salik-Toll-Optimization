@@ -71,7 +71,6 @@ These findings show that toll adoption is **not binary** and depends strongly on
 src/            Core routing and cost models
 data/           Salik gates and road network data
 notebooks/      Experiments and visualizations
-app.py          Main execution script
 requirements.txt
 
 ---

@@ -42,7 +42,7 @@ def route_tolls(route_nodes, G, gates_df, toll_price=4.0):
         Price per toll gate crossing (AED).
 
     Returns
-    -------
+    ----------
     float
         Total toll cost for the route.
     """

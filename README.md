@@ -1,100 +1,222 @@
-# Dubai Salik Toll Optimization
+Dubai Salik Toll Optimization
 
-This project analyzes toll adoption behavior on Dubai’s Salik road pricing system using a combination of transportation economics, network simulation, and machine learning.
+This project analyzes toll adoption behavior in Dubai’s Salik road pricing system using network simulation, transportation economics, and behavioral decision modeling.
 
-Most navigation systems treat toll usage as a binary constraint — either **avoid tolls** or **allow tolls**.  
-However, toll adoption is often a **marginal economic decision**, where drivers may rationally choose to pay **some tolls but not others** depending on the time savings.
+Most navigation systems treat toll usage as a binary constraint:
+	•	Avoid tolls
+	•	Allow tolls
 
-This project models that decision process on the **Dubai road network**.
+However, in reality, toll decisions are often marginal economic choices. Drivers may rationally choose to pay some tolls but not others depending on the time savings relative to cost.
 
----
+This project models that decision process on the Dubai road network to evaluate whether non-binary toll routing behavior naturally emerges.
 
-# Project Objective
+⸻
 
-The goal of this project is to understand when drivers rationally adopt toll routes based on the trade-off between:
+Research Question
 
-- travel time
-- toll cost
-- traffic congestion
-- individual value of time
+Do realistic urban road networks produce multi-toll economic tradeoffs, where drivers rationally choose between:
+	•	slower free routes
+	•	partially tolled routes
+	•	fully tolled fast routes
 
-The analysis evaluates whether **non-binary toll routing decisions** emerge in realistic road networks.
+depending on their value of time and traffic conditions?
 
----
+⸻
 
-# Methodology
+Project Objective
 
-The project follows a simulation pipeline:
+The objective is to evaluate when drivers rationally adopt toll routes based on the trade-off between:
+	•	travel time
+	•	toll cost
+	•	congestion severity
+	•	individual Value of Time (VoT)
 
-1. **Road Network Construction**
+The project tests whether real road networks produce economic switching points where different driver types choose different routes.
 
-Dubai's road network is extracted using **OSMnx**, producing a graph representation of the city.
+⸻
 
-2. **Toll Gate Mapping**
+Methodology
 
-Salik toll gate coordinates are mapped onto the road network to detect toll crossings along routes.
+The project follows a simulation pipeline composed of five stages.
 
-3. **Route Generation**
+1. Road Network Construction
 
-For each origin–destination pair, multiple feasible routes are generated.
+Dubai’s road network is extracted using OSMnx, which converts OpenStreetMap data into a graph representation where:
+	•	nodes represent intersections
+	•	edges represent road segments
 
-4. **Economic Cost Model**
+Each edge contains attributes such as:
+	•	length
+	•	road classification
+	•	travel time
 
-Routes are evaluated using generalized travel cost:
-Generalized Cost = Travel Time × Value of Time + Toll Cost
+⸻
 
-5. **Switching Analysis**
+2. Toll Gate Mapping
 
-The simulation identifies the **Value-of-Time threshold** where drivers switch between toll and non-toll routes.
+Salik toll gate coordinates are mapped onto the road network.
 
-6. **Machine Learning Layer**
+Each road segment near a toll gate is tagged with:
+	•	is_toll
+	•	toll_gate
+	•	near_toll
 
-A classifier predicts the **probability of toll adoption** based on observable trip conditions.
+This allows the routing algorithm to detect when routes cross toll infrastructure.
 
----
+⸻
 
-# Key Results
+3. Route Generation
 
-The simulation produced several insights:
+For each origin–destination corridor, multiple candidate routes are generated using NetworkX shortest path algorithms.
 
-- **76%** of analyzed corridors contain multi-toll alternatives
-- **57%** of route choices switch as Value-of-Time increases
-- **9.8%** of toll decisions change under severe congestion
-- Corridor sensitivity varies between **5% and 33%**
+Several routing strategies are used:
+	•	fastest routes (minimum travel time)
+	•	shortest distance routes
+	•	toll-penalized routes
+	•	balanced toll strategies
+	•	stochastic driver preference simulations
 
-These findings show that toll adoption is **not binary** and depends strongly on economic trade-offs and traffic conditions.
+This produces a diverse set of feasible travel options for each trip.
 
----
+⸻
 
-# Repository Structure
+4. Economic Cost Model
 
-src/            Core routing and cost models
-data/           Salik gates and road network data
-notebooks/      Experiments and visualizations
-requirements.txt
+Each route is evaluated using a generalized travel cost function:
 
----
+Generalized\ Cost = Travel\ Time \times Value\ of\ Time + Toll\ Cost
 
-# Technologies Used
+Where:
+	•	Travel Time is measured in minutes
+	•	Value of Time (VoT) represents how much a driver values time savings
+	•	Toll Cost reflects Salik gate pricing
 
-- Python
-- OSMnx
-- NetworkX
-- Pandas
-- Scikit-learn
-- Matplotlib
+This allows the model to represent heterogeneous driver preferences.
 
----
+⸻
 
-# Limitations
+5. Switching Analysis
 
-- Driver behavior is simulated rather than based on real toll transaction data
-- Congestion is modeled using travel-time multipliers rather than live traffic data
-- Only representative origin–destination corridors are evaluated
+For competing routes, the model calculates the break-even Value of Time at which a driver switches from one route to another.
 
----
+The switching threshold is defined as:
 
-# Author
+V = \frac{C_B - C_A}{T_A - T_B}
 
-Hussam Jaber  
+where:
+	•	T_A, T_B are route travel times
+	•	C_A, C_B are toll costs
+
+This produces a behavioral switching curve across driver types.
+
+⸻
+
+Experiment Design
+
+The simulation evaluates multiple travel corridors across Dubai, including:
+	•	Marina → Downtown
+	•	Marina → DXB Airport
+	•	JLT → Deira
+	•	Barsha → Downtown
+	•	Marina → Mirdif
+	•	Marina → Qusais
+
+Each corridor is tested across multiple scenarios:
+	•	different departure hours
+	•	varying congestion conditions
+	•	heterogeneous driver value-of-time distributions
+
+⸻
+
+Key Results
+
+The simulation produced several behavioral insights.
+	•	76% of analyzed corridors contain multi-toll alternatives
+	•	57% of route choices change as Value-of-Time increases
+	•	9.8% of toll decisions change under severe congestion
+	•	corridor sensitivity varies between 5% and 33%
+
+These results indicate that toll adoption is not binary and is instead driven by economic tradeoffs between time and cost.
+
+⸻
+
+Example Tradeoff Structure
+
+Typical route choices observed in the simulation:
+Route -> Travel Time -> Toll Cost
+Free Route -> 25 min -> 0 AED
+Partial Toll -> 20 min -> 8 AED
+Full Toll -> 17 min -> 12 AED
+
+Different driver types choose different routes depending on their value of time.
+
+Repository Structure
+Dubai-Salik-Toll-Optimization
+│
+├── data
+│   ├── dubai.graphml
+│   ├── salik_gates.csv
+│   └── tradeoff_data.csv
+│
+├── notebooks
+│   └── notebook_Final.ipynb
+│
+├── src
+│   ├── routing.py
+│   ├── toll_detector.py
+│   ├── cost_model.py
+│   └── analysis.py
+│
+├── app.py
+├── requirements.txt
+└── README.md
+
+
+Technologies Used
+	•	Python
+	•	OSMnx
+	•	NetworkX
+	•	Pandas
+	•	NumPy
+	•	Matplotlib
+	•	Scikit-learn
+
+These tools are used for:
+	•	road network modeling
+	•	route generation
+	•	economic simulation
+	•	data analysis
+	•	visualization
+
+Limitations
+
+Several simplifying assumptions are made:
+	•	Driver behavior is simulated rather than based on real Salik transaction data
+	•	Congestion is modeled using travel-time multipliers rather than real traffic feeds
+	•	Only representative origin–destination corridors are evaluated
+	•	Behavioral parameters (VoT distribution) are approximations
+
+Future work could integrate:
+	•	real traffic APIs
+	•	historical toll usage data
+	•	dynamic congestion models
+
+⸻
+
+Future Work
+
+Potential extensions of the project include:
+	•	integration with live traffic data
+	•	machine learning prediction of toll adoption
+	•	personalized route recommendations
+	•	reinforcement learning for route optimization
+	•	urban toll pricing policy simulations
+
+⸻
+
+Author
+
+Hussam Jaber
+
 MSc Artificial Intelligence
+University of Birmingham

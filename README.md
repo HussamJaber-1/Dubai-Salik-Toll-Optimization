@@ -247,7 +247,7 @@ Potential extensions of the project include:
 
 Detailed project documentation:
 
-- Methodology → docs/methodology.md
+- Methodology → src/methodology.md
 
 ---
 

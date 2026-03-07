@@ -243,6 +243,14 @@ Potential extensions of the project include:
 
 ---
 
+## Documentation
+
+Detailed project documentation:
+
+- Methodology → docs/methodology.md
+
+---
+
 # Author
 
 **Hussam Jaber**  

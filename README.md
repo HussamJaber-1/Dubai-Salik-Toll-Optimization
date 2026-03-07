@@ -39,6 +39,8 @@ Methodology
 
 The project follows a simulation pipeline composed of five stages.
 
+⸻
+
 1. Road Network Construction
 
 Dubai’s road network is extracted using OSMnx, which converts OpenStreetMap data into a graph representation where:
@@ -46,7 +48,7 @@ Dubai’s road network is extracted using OSMnx, which converts OpenStreetMap da
 	•	edges represent road segments
 
 Each edge contains attributes such as:
-	•	length
+	•	road length
 	•	road classification
 	•	travel time
 
@@ -83,8 +85,7 @@ This produces a diverse set of feasible travel options for each trip.
 4. Economic Cost Model
 
 Each route is evaluated using a generalized travel cost function:
-
-Generalized\ Cost = Travel\ Time \times Value\ of\ Time + Toll\ Cost
+Generalized Cost = Travel Time × Value of Time + Toll Cost
 
 Where:
 	•	Travel Time is measured in minutes
@@ -100,12 +101,10 @@ This allows the model to represent heterogeneous driver preferences.
 For competing routes, the model calculates the break-even Value of Time at which a driver switches from one route to another.
 
 The switching threshold is defined as:
+V = (C_B - C_A) / (T_A - T_B)
 
-V = \frac{C_B - C_A}{T_A - T_B}
-
-where:
-	•	T_A, T_B are route travel times
-	•	C_A, C_B are toll costs
+	•	T_A , T_B = route travel times
+	•	C_A , C_B = toll costs
 
 This produces a behavioral switching curve across driver types.
 
@@ -130,7 +129,7 @@ Each corridor is tested across multiple scenarios:
 
 Key Results
 
-The simulation produced several behavioral insights.
+The simulation produced several behavioral insights:
 	•	76% of analyzed corridors contain multi-toll alternatives
 	•	57% of route choices change as Value-of-Time increases
 	•	9.8% of toll decisions change under severe congestion
@@ -143,12 +142,23 @@ These results indicate that toll adoption is not binary and is instead driven by
 Example Tradeoff Structure
 
 Typical route choices observed in the simulation:
-Route -> Travel Time -> Toll Cost
-Free Route -> 25 min -> 0 AED
-Partial Toll -> 20 min -> 8 AED
-Full Toll -> 17 min -> 12 AED
+Route Type
+Travel Time
+Toll Cost
+Free Route
+25 min
+0 AED
+Partial Toll
+20 min
+8 AED
+Full Toll
+17 min
+12 AED
 
-Different driver types choose different routes depending on their value of time.
+
+Different driver types choose different routes depending on their Value of Time.
+
+⸻
 
 Repository Structure
 Dubai-Salik-Toll-Optimization
@@ -171,7 +181,6 @@ Dubai-Salik-Toll-Optimization
 ├── requirements.txt
 └── README.md
 
-
 Technologies Used
 	•	Python
 	•	OSMnx
@@ -188,13 +197,15 @@ These tools are used for:
 	•	data analysis
 	•	visualization
 
+⸻
+
 Limitations
 
 Several simplifying assumptions are made:
-	•	Driver behavior is simulated rather than based on real Salik transaction data
-	•	Congestion is modeled using travel-time multipliers rather than real traffic feeds
-	•	Only representative origin–destination corridors are evaluated
-	•	Behavioral parameters (VoT distribution) are approximations
+	•	driver behavior is simulated rather than based on real Salik transaction data
+	•	congestion is modeled using travel-time multipliers rather than live traffic feeds
+	•	only representative origin–destination corridors are evaluated
+	•	behavioral parameters (VoT distribution) are approximations
 
 Future work could integrate:
 	•	real traffic APIs

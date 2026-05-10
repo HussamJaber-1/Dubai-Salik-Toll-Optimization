@@ -215,45 +215,19 @@ These tools are used for:
 
 ---
 
-# Limitations
+---
 
-Several simplifying assumptions are made:
+## Tech Stack
 
-- driver behavior is simulated rather than based on real Salik transaction data
-- congestion is modeled using travel-time multipliers rather than live traffic feeds
-- only representative origin–destination corridors are evaluated
-- behavioral parameters (VoT distribution) are approximations
-
-Future work could integrate:
-
-- real traffic APIs
-- historical toll usage data
-- dynamic congestion models
+Python, OSMnx, NetworkX, Pandas, NumPy, Matplotlib, scikit-learn
 
 ---
 
-# Future Work
+## Limitations
 
-Potential extensions of the project include:
+- Congestion modeled via travel-time multipliers rather than live traffic feeds
+- VoT distribution uses approximated behavioral parameters
+- Only representative OD corridors evaluated
 
-- integration with **live traffic data**
-- machine learning prediction of toll adoption
-- personalized route recommendations
-- reinforcement learning for route optimization
-- urban toll pricing policy simulations
-
----
-
-## Documentation
-
-Detailed project documentation:
-
-- Methodology → methodology.md
-
----
-
-# Author
-
-**Hussam Jaber**  
-MSc Artificial Intelligence  
-University of Birmingham
+Future extensions: live traffic API integration, ML prediction of toll adoption, 
+reinforcement learning for dynamic route optimization, personalized recommendation system.
